@@ -2,15 +2,13 @@ package org.fgimeno.qachallenge.pages;
 
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.openqa.selenium.By.*;
 
@@ -18,7 +16,7 @@ public class GetGithubRepoPage {
     public static final String TITLE = "Get Github Repos";
 
     //WebElements locators
-    By messageArea = new ByClassName("message-area");
+    By messageArea = new ByXPath("//section[@class='message-area']/p");
     By inputUserName = new ById("username");
     By goButton = new ByXPath("/html/body/div/div/main/form/button");
     String repoListBaseXpath = "//section[@class='output-area']//li";
@@ -44,9 +42,18 @@ public class GetGithubRepoPage {
         driver.findElement(goButton).click();
     }
 
-    public String getSearchSuccessActionMessage() {
+    public String getSearchFeedbackMessage() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(messageArea));
-        return driver.findElement(messageArea).findElement(new ByTagName("p")).getText();
+        return driver.findElement(messageArea).getText();
+    }
+
+    public boolean isSearchFeedbackMessageVisible () {
+        try {
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(messageArea));
+        } catch (TimeoutException e)  {
+            return true;
+        }
+        return false;
     }
 
     public Map<String, List<WebElement>> getReposInfo() {

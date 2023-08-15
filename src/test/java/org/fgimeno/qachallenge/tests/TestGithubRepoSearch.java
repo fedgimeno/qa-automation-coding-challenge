@@ -10,27 +10,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class TestGithubRepoSearch extends TestBase{
+public class TestGithubRepoSearch extends TestBase {
 
 
     /**
-     * @param username - The Github username
-     * @param expectedMessage - The expected message for search action
-     *
-     * Verify whether the expected success / failure message is displayed when searching a Github user
+     * @param username - The Github username.
+     * @param expectedMessage  The expected message for search action.
+     * Testable flows #4 and #7 - Verify whether the expected success / failure message is displayed for a short
+     * amount of time when searching a Github user
      */
     @Test (dataProviderClass = GetGithubRepoDataProviders.class, dataProvider = "githubMixedUserNames")
     public void testGithubUserSearchResultMessage (String username, String expectedMessage) {
         getGithubRepoPage.enterGithubUser(username);
         getGithubRepoPage.clickGoButton();
-        Assert.assertEquals(getGithubRepoPage.getSearchSuccessActionMessage(), expectedMessage);
+        Assert.assertEquals(getGithubRepoPage.getSearchFeedbackMessage(), expectedMessage);
+        Assert.assertFalse(getGithubRepoPage.isSearchFeedbackMessageVisible());
     }
 
 
     /**
-     * @param username - The Github username
-     *
-     * Verify whether the listed repos' links, lead the user to the corresponding, valid Github url
+     * @param username - The Github username.
+     * Testable flow #6- Verify whether the listed repos' links, take the user to the corresponding, valid Github url.
      */
     @Test (dataProviderClass = GetGithubRepoDataProviders.class, dataProvider = "githubValidUsers")
     public void testGithubUserRepoLinks (String username) {
@@ -41,9 +41,12 @@ public class TestGithubRepoSearch extends TestBase{
             WebElement link = reposInfo.get("links").get(i);
             String repoName = reposInfo.get("names").get(i).getText();
             String url = String.format("https://github.com/%s/%s", username, repoName);
-            Assert.assertEquals(link.getAttribute("href"), url, "Link does not lead to a Github repository");
+            Assert.assertEquals(
+                    link.getAttribute("href"),
+                    url,
+                    "Link does not lead to a Github repository");
             link.click();
-            Set<String> handles = driver.getWindowHandles();            //Get the handles of all currently open windows (tabs)
+            Set<String> handles = driver.getWindowHandles();            //Get the handles of all currently open tabs
             driver.switchTo().window(handles.toArray()[1].toString());  //Switch to the newly opened tab
             wait.until(ExpectedConditions.titleContains(repoName));
             driver.close();                                             //Close tab
