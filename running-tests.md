@@ -1,6 +1,8 @@
 In order to run this test suite, please make sure you have the following installed:
 * Java JDK 11 (or newer)
 * Maven
+* Mozilla Firefox browser
+
 Tests source can be found at [src/test/java](src/test/java) folder.
 
 1) Make sure that the application under test is running by opening a terminal and executing the `yarn start` command. Refer to the [setup.md](setup.md) file for more information. The application should be up and running at http://localhost:3000.
